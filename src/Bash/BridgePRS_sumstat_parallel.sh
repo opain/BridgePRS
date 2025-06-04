@@ -13,9 +13,11 @@ safe_rm() {
 }
 
 set -e
+set -x
+
 trap 'echo "ERROR on line $LINENO: $BASH_COMMAND"; exit 1' ERR
 
-RSCRIPTS=~/BridgePRS/src/Rscripts
+RSCRIPTS=${1}
 FPATH=$RSCRIPTS"/functions.R"
 
 pheno_name="y"
@@ -230,7 +232,7 @@ if [ $do_sumstat_pop1 -eq 1 ]
 then
     Rscript --vanilla $RSCRIPTS"/"make_sumstats_subset.R \
  	    --fpath $FPATH \
-	    --blockdir $blockdir/$pop1 \
+	    --blockdir $blockdir/$pop1/blocks \
 	    --workdir $outdir/$pop1 \
 	    --sumstats $pop1_sumstats \
 	    --ld.ids $pop1_ld_ids \
@@ -255,7 +257,7 @@ if [ $do_sumstat_pop2 -eq 1 ]
 then
     Rscript --vanilla $RSCRIPTS"/"make_sumstats_subset.R \
  	    --fpath $FPATH \
-	    --blockdir $blockdir/$pop2 \
+	    --blockdir $blockdir/$pop2/blocks \
 	    --workdir $outdir/$pop2 \
 	    --sumstats $pop2_sumstats \
 	    --ld.ids $pop2_ld_ids \
@@ -327,7 +329,7 @@ then
  	    --fpath $FPATH \
 	    --stage1  $outdir/${pop1}/fold${iter}/models/stage1 \
 	    --fold ${iter} \
-	    --blockdir $blockdir/$pop1 \
+	    --blockdir $blockdir/$pop1/blocks \
 	    --workdir $outdir/${pop1} \
 	    --bfile $pop1_ld_bfile \
 	    --ld.ids $pop1_ld_ids \
@@ -461,7 +463,7 @@ then
  	    --fpath $FPATH \
 	    --stage1  $outdir/$pop2/fold${iter}/models/stage1 \
 	    --stage2 $outdir/$pop2/fold${iter}/models/stage2 \
-	    --blockdir $blockdir/$pop2 \
+	    --blockdir $blockdir/$pop2/blocks \
 	    --workdir $outdir/$pop2 \
 	    --bfile $pop2_ld_bfile \
 	    --ld.ids $pop2_ld_ids \

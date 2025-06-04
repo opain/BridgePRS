@@ -193,20 +193,22 @@ for( chr in 1:22 ){
                                         n.folds=opt$n.folds,
                                         strand.check=opt$strand.check )},
                      mc.cores=as.numeric(opt$n.cores) )
-    for( i in 1:length(snp.fill) ){
-        ptr <- match( sumstats.b[[i]]$SNP, sumstats$SNP )
-        if( length(ptr)>0 ){
-            for( k in 1:opt$n.folds ){
-                sumstats.1[[k]][ptr,] <- data.frame( sumstats.b[[i]]$SNP,
-                                                    sumstats$ALLELE0[ptr],
-                                                    sumstats$ALLELE1[ptr],
-                                                    sumstats.b[[i]]$BETA[,k],
-                                                    sumstats.b[[i]]$SE,
-                                                    sumstats.b[[i]]$P[,k],
-                                                    sumstats.b[[i]]$XtY.2[,k],
-                                                    sumstats.b[[i]]$XtY.3[,k] )
-            }
-        }
+    if(length(snp.fill) > 0){
+      for( i in 1:length(snp.fill) ){
+          ptr <- match( sumstats.b[[i]]$SNP, sumstats$SNP )
+          if( length(ptr)>0 ){
+              for( k in 1:opt$n.folds ){
+                  sumstats.1[[k]][ptr,] <- data.frame( sumstats.b[[i]]$SNP,
+                                                      sumstats$ALLELE0[ptr],
+                                                      sumstats$ALLELE1[ptr],
+                                                      sumstats.b[[i]]$BETA[,k],
+                                                      sumstats.b[[i]]$SE,
+                                                      sumstats.b[[i]]$P[,k],
+                                                      sumstats.b[[i]]$XtY.2[,k],
+                                                      sumstats.b[[i]]$XtY.3[,k] )
+              }
+          }
+      }
     }
     for( k in 1:opt$n.folds ){
         fold.out <- ifelse( is.null(opt$fold), k, opt$fold )

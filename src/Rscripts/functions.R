@@ -400,7 +400,9 @@ sumstat.subset <- function( block.i=NULL, snp=NULL, sumstats, ld.ids,
 
             VX <- diag(ld.mat)
             XtY <- n.all * VX * sumstats$BETA
-            se <- abs(sumstats$BETA) / -qnorm(sumstats$P/2)
+            p.clip <- pmin(pmax(sumstats$P, 1e-300), 1 - 1e-15)
+            se <- abs(sumstats$BETA) / -qnorm(p.clip / 2)
+#            se <- abs(sumstats$BETA) / -qnorm(sumstats$P/2)
             m1 <- matrix( rep(se^2,k), ncol=k, nrow=k ) *
                 matrix( rep(VX,k), ncol=k, nrow=k )
             m <- ifelse( m1<t(m1), m1, t(m1) )

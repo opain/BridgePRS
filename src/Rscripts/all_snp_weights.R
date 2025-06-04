@@ -185,21 +185,23 @@ for( chr in 1:22 ){
 #        max.const <- max( max.const, diag(ref.stats$ld) * sumstats$SE[ptr.ss]^2 )
     }
     single.snps <- setdiff( snps, all.block.snps )
-    for( i in 1:length(single.snps) ){
-        ptr.ss <- match( single.snps[i], sumstats$SNP )
-        for( k in 1:n.models ){
-            ptr.prs <- match( single.snps[i], rownames(models[[k]]) )
-            ref.stats <- est.ref.stats( single.snps[i], ld.ids, X.bed, bim,
-                                       sumstats$ALLELE1[ptr.ss], sumstats$ALLELE0[ptr.ss],
-                                       opt$strand.check, n.eff=FALSE )
-            beta <- models[[k]][ptr.prs,,drop=FALSE]
-            Sigma.prs[[k]] <- Sigma.prs[[k]] +  t(beta) %*% ref.stats$ld %*% beta
-            betatXtY.2[[k]] <- betatXtY.2[[k]] +
-                t(beta) %*% as.matrix(sumstats$XtY.2[ptr.ss])
-            betatXtY.3[[k]] <- betatXtY.3[[k]] +
-                t(beta) %*% as.matrix(sumstats$XtY.3[ptr.ss])
-        }
-#        max.const <- max( max.const, ref.stats$ld * sumstats$SE[ptr.ss]^2 )
+    if(length(single.snps) > 0){
+      for( i in 1:length(single.snps) ){
+          ptr.ss <- match( single.snps[i], sumstats$SNP )
+          for( k in 1:n.models ){
+              ptr.prs <- match( single.snps[i], rownames(models[[k]]) )
+              ref.stats <- est.ref.stats( single.snps[i], ld.ids, X.bed, bim,
+                                         sumstats$ALLELE1[ptr.ss], sumstats$ALLELE0[ptr.ss],
+                                         opt$strand.check, n.eff=FALSE )
+              beta <- models[[k]][ptr.prs,,drop=FALSE]
+              Sigma.prs[[k]] <- Sigma.prs[[k]] +  t(beta) %*% ref.stats$ld %*% beta
+              betatXtY.2[[k]] <- betatXtY.2[[k]] +
+                  t(beta) %*% as.matrix(sumstats$XtY.2[ptr.ss])
+              betatXtY.3[[k]] <- betatXtY.3[[k]] +
+                  t(beta) %*% as.matrix(sumstats$XtY.3[ptr.ss])
+          }
+  #        max.const <- max( max.const, ref.stats$ld * sumstats$SE[ptr.ss]^2 )
+      }
     }
 }
 R2.model <- vector()
